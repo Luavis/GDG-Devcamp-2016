@@ -28,8 +28,7 @@ async def _handle(reader, writer):
         "Content-Length: {0}\r\n"
         "Content-Type: text/html; charset=\"utf-8\"\r\n"
         "Date: \r\n"
-        "\r\n".format(len(response_data)))
-        + response_data
+        "\r\n".format(len(response_data))) + response_data
     writer.write(response.encode('utf-8'))
     writer.close()
 
@@ -43,3 +42,4 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.create_task(run_server())
     loop.run_forever()
+
