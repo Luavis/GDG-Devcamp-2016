@@ -22,7 +22,7 @@ async def _handle(reader, writer):
         # read up next
         header_line = (await reader.readuntil(b'\r\n')).decode('ascii')[:-2]
 
-    print((method, path, http_version, headers))
+    print('[{0}] - {1}'.format(method, path))
     if '?' in path:
         (path, query) = path.split('?')
     else:
@@ -30,7 +30,7 @@ async def _handle(reader, writer):
 
     # WSGI work!
 
-    environ = {}
+    environ = {'HTTP_{0}'.format(k.replace('-', '_')): v for k, v in headers.items()}
     environ['wsgi.input'] = writer
     environ['wsgi.errors'] = sys.stderr
     environ['wsgi.version'] = (1, 0)
@@ -50,7 +50,6 @@ async def _handle(reader, writer):
     headers_sent = []
 
     def write(data):
-        print(data)
         if not headers_set:
             raise AssertionError("write() before start_response()")
 
